@@ -2,22 +2,14 @@
 
 # Interacts with user until single letter confirmation (y/n).
 #
-# @param    @:1 arguments for `printf` question
-# @returns  -   when $REPLY is set to "y" or "n"
+# @param    1   global variable name
+# @param    @:2 arguments for `printf` question
+# @returns  -   when global variable is set to "y" or "n"
 interaction_confirmation_y_n() {
-    # local valid_answer=0;
-
-    # while [[ "$valid_answer" -eq 0 ]]; do
-    #     printf "$@";
-    #     read -r -p " (y/n) ";
-    #     printf "\n";
-    #     _interaction_confirmation_check $REPLY y n;
-    #     valid_answer=$?;
-    # done;
-    # Commented code has the same output as uncommented, below
+    local global_var_name=$1;
 
     local text="";
-    for var in "${@:1}"; do
+    for var in "${@:2}"; do
         text+="\"$var\" ";
     done;
 
@@ -31,6 +23,7 @@ interaction_confirmation_y_n() {
     eval $prompt_fn_body;
 
     interaction_get_specific_text \
+        "$global_var_name" \
         "_interaction_confirmation_check" \
         "$prompt_fn_name" \
         "y" \
@@ -39,21 +32,24 @@ interaction_confirmation_y_n() {
 
 # Interacts with user until a validation function returns 1.
 #
-# @param    1   name of validation function; will be called with ($answer @options)
-# @param    2   name of prompt display function; will be called with ($INVALID_REPLY)
-# @param    @:3 options
-# @returns  -   when $REPLY is set to a string that passed validation
+# @param    1   global variable name (return value)
+# @param    2   name of validation function; will be called with ($answer @options)
+# @param    3   name of prompt display function; will be called with ($INVALID_REPLY)
+# @param    @:4 options
+# @returns  -   when global variable is set to a string that passed validation
 interaction_get_specific_text() {
-    local validator_name=$1;
-    local prompt_name=$2;
-    local options=${@:3};
+    local global_var_name=$1;
+    local validator_name=$2;
+    local prompt_name=$3;
+    local options=${@:4};
 
     local valid_answer=0;
 
     while [[ "$valid_answer" -eq 0 ]]; do
-        read -r -p "`eval ${prompt_name}`";
+        read -r -p "`eval ${prompt_name}`" $global_var_name;
         printf "\n";
-        eval ${validator_name} $REPLY "$@";
+        eval local read_value=\$$global_var_name;
+        eval ${validator_name} $read_value "$@";
         valid_answer=$?;
     done;
 }
