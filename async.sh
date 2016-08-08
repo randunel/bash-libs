@@ -6,6 +6,7 @@
 async_wait_functions() {
     local -A map;
     local counter=0;
+    local fn;
     for fn in "$@"; do
         counter=$(($counter + 1));
         eval $fn &
@@ -16,6 +17,7 @@ async_wait_functions() {
     done;
 
     local waitlist="";
+    local ix;
     for ix in $(seq $counter); do
         waitlist="$waitlist ${map[$ix-pid]}";
     done;

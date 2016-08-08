@@ -10,7 +10,7 @@ var_validate_presence() {
 
     local -a missing_envs;
     local ix=0;
-
+    local var;
     for var in "${@:2}"; do
         eval local value=\$$var;
         if [[ -z "$value" ]]; then

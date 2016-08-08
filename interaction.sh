@@ -9,6 +9,7 @@ interaction_confirmation_y_n() {
     local global_var_name=$1;
 
     local text="";
+    local var;
     for var in "${@:2}"; do
         text+="\"$var\" ";
     done;
@@ -58,6 +59,7 @@ _interaction_confirmation_check() {
     local reply=$1;
     local options=${@:2};
 
+    local option;
     for option in $options; do
         if [[ $reply == $option ]]; then
             return 1;
