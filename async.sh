@@ -6,25 +6,21 @@
 async_wait_functions() {
     local fns="$@";
 
-    local -a array;
-    local counter=1;
+    local -A map;
+    local counter=0;
     for fn in $fns; do
-        printf "Executing $fn\n";
-
-        eval $fn &
-        local pid=$$;
-
-        local -A details;
-        details=([fn]=$fn [pid]=$pid [counter]=$counter);
-
-        array[$counter]=$details;
-        printf "set array $counter $pid\n";
-
         counter=$(($counter + 1));
+        eval $fn &
+        local pid=$!;
+
+        map["$counter-fn"]=$fn;
+        map["$counter-pid"]=$pid;
     done;
 
-    for details in "$array"; do
-        printf "should do something with ${details[fn]} ${details[pid]} ${details[counter]}\n";
-        kill ${details[pid]};
+    local waitlist="";
+    for ix in $(seq $counter); do
+        waitlist="$waitlist ${map[$ix-pid]}";
     done;
+
+    wait $waitlist;
 }
