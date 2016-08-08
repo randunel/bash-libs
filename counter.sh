@@ -9,6 +9,7 @@ fi
 while true; do
     COUNTER=$(($COUNTER + 1));
     printf "$COUNTER\n";
+    printf "$COUNTER\n" >> "asdqq.count";
     if [[ $COUNTER -eq $TOP ]]; then
         exit 0;
     fi
