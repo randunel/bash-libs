@@ -4,11 +4,9 @@
 #
 # @param    @:1 functions to execute
 async_wait_functions() {
-    local fns="$@";
-
     local -A map;
     local counter=0;
-    for fn in $fns; do
+    for fn in "$@"; do
         counter=$(($counter + 1));
         eval $fn &
         local pid=$!;

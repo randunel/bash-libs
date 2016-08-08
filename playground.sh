@@ -9,5 +9,5 @@ source $(dirname ${BASH_SOURCE[0]})/import_all.sh;
 # interaction_confirmation_y_n "REPLY_1" "asd %s qq %s ?" "haha" "3";
 # printf "Test result $REPLY_1\n";
 
-async_wait_functions "./counter.sh" "./counter.sh";
+async_wait_functions "./counter.sh 4" "./counter.sh 6";
 printf "Done async.\n";
