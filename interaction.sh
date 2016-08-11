@@ -29,7 +29,6 @@ interaction_confirmation_y_n() {
         "$prompt_fn_name" \
         "y" \
         "n";
-    unset $prompt_name;
 }
 
 # Interacts with user until a validation function returns 1.
